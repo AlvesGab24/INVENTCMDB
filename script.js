@@ -1,92 +1,85 @@
-// Função para pegar dados do localStorage
-function pegarItens() {
-  const itensJSON = localStorage.getItem('cmdb-itens');
-  return itensJSON ? JSON.parse(itensJSON) : [];
-}
+// ========== Função para cadastrar um novo item ==========
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("formCadastro");
 
-// Função para salvar dados no localStorage
-function salvarItens(itens) {
-  localStorage.setItem('cmdb-itens', JSON.stringify(itens));
-}
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-// Cadastro do formulário
-const formCadastro = document.getElementById('formCadastro');
-if (formCadastro) {
-  formCadastro.addEventListener('submit', function (e) {
-    e.preventDefault();
+      const nome = document.getElementById("nome").value;
+      const dataCompra = document.getElementById("dataCompra").value;
+      const modelo = document.getElementById("modelo").value;
+      const usuario = document.getElementById("usuario").value;
 
-    const nome = document.getElementById('nome').value.trim();
-    const dataCompra = document.getElementById('dataCompra').value;
-    const modelo = document.getElementById('modelo').value.trim();
-    const usuario = document.getElementById('usuario').value.trim();
+      const item = {
+        id: Date.now(),
+        nome,
+        dataCompra,
+        modelo,
+        usuario,
+      };
 
-    if (!nome || !dataCompra || !modelo || !usuario) {
-      alert('Por favor, preencha todos os campos.');
-      return;
-    }
+      let itens = JSON.parse(localStorage.getItem("cmdb-itens")) || [];
+      itens.push(item);
+      localStorage.setItem("cmdb-itens", JSON.stringify(itens));
 
-    let itens = pegarItens();
-
-    itens.push({
-      id: Date.now(),
-      nome,
-      dataCompra,
-      modelo,
-      usuario,
+      alert("Item cadastrado com sucesso!");
+      form.reset();
     });
+  }
 
-    salvarItens(itens);
+  // ========== Se estiver na página de listagem ==========
+  const tabela = document.getElementById("tabelaItens");
 
-    document.getElementById('msgSucesso').textContent = 'Item cadastrado com sucesso!';
-    formCadastro.reset();
-  });
-}
+  if (tabela) {
+    carregarItensTabela();
+  }
 
-// Listagem dos itens na tabela
+  // ========== Se estiver na Home com campo de busca ==========
+  const campoBusca = document.getElementById("buscaNome");
+  if (campoBusca) {
+    const botaoBusca = document.querySelector("button[onclick='buscarItem()']");
+    if (botaoBusca) {
+      botaoBusca.addEventListener("click", buscarItem);
+    }
+  }
+});
+
+// ========== Carregar tabela de itens ==========
 function carregarItensTabela() {
-  const tabelaBody = document.querySelector('#tabelaItens tbody');
-  if (!tabelaBody) return;
+  const itens = JSON.parse(localStorage.getItem("cmdb-itens")) || [];
+  const tabela = document.getElementById("tabelaItens").querySelector("tbody");
+  tabela.innerHTML = "";
 
-  const itens = pegarItens();
-
-  tabelaBody.innerHTML = '';
-
-  itens.forEach(item => {
-    const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-      <td>${item.nome}</td>
-      <td>${item.dataCompra}</td>
-      <td>${item.modelo}</td>
-      <td>${item.usuario}</td>
-      <td>
-        <button onclick="excluirItem(${item.id})" style="color: red;">Excluir</button>
-      </td>
+  itens.forEach((item) => {
+    const linha = `
+      <tr>
+        <td>${item.nome}</td>
+        <td>${item.dataCompra}</td>
+        <td>${item.modelo}</td>
+        <td>${item.usuario}</td>
+        <td><button onclick="excluirItem(${item.id})">Excluir</button></td>
+      </tr>
     `;
-
-    tabelaBody.appendChild(tr);
+    tabela.innerHTML += linha;
   });
 }
 
-// Função para excluir item
+// ========== Excluir item ==========
 function excluirItem(id) {
-  if (!confirm('Tem certeza que deseja excluir este item?')) return;
-
-  let itens = pegarItens();
-  itens = itens.filter(item => item.id !== id);
-  salvarItens(itens);
+  let itens = JSON.parse(localStorage.getItem("cmdb-itens")) || [];
+  itens = itens.filter((item) => item.id !== id);
+  localStorage.setItem("cmdb-itens", JSON.stringify(itens));
   carregarItensTabela();
 }
 
-// Carregar tabela automaticamente na página lista.html
-if (document.getElementById('tabelaItens')) {
-  carregarItensTabela();
+// ========== Buscar item por nome ==========
 function buscarItem() {
-  const termo = document.getElementById('buscaNome').value.toLowerCase();
-  const itens = JSON.parse(localStorage.getItem('cmdb-itens')) || [];
-  const resultado = document.getElementById('resultadoBusca');
+  const termo = document.getElementById("buscaNome").value.toLowerCase();
+  const itens = JSON.parse(localStorage.getItem("cmdb-itens")) || [];
+  const resultado = document.getElementById("resultadoBusca");
 
-  const encontrados = itens.filter(item =>
+  const encontrados = itens.filter((item) =>
     item.nome.toLowerCase().includes(termo)
   );
 
@@ -95,17 +88,17 @@ function buscarItem() {
     return;
   }
 
-  let html = '<table border="1" cellspacing="0" cellpadding="10">';
-  html += `
-    <tr>
-      <th>Nome</th>
-      <th>Data de Compra</th>
-      <th>Modelo</th>
-      <th>Usuário</th>
-    </tr>
+  let html = `
+    <table border="1" cellspacing="0" cellpadding="10">
+      <tr>
+        <th>Nome</th>
+        <th>Data de Compra</th>
+        <th>Modelo</th>
+        <th>Usuário</th>
+      </tr>
   `;
 
-  encontrados.forEach(item => {
+  encontrados.forEach((item) => {
     html += `
       <tr>
         <td>${item.nome}</td>
@@ -116,7 +109,6 @@ function buscarItem() {
     `;
   });
 
-  html += '</table>';
+  html += "</table>";
   resultado.innerHTML = html;
 }
-
