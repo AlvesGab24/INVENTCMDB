@@ -81,4 +81,42 @@ function excluirItem(id) {
 // Carregar tabela automaticamente na página lista.html
 if (document.getElementById('tabelaItens')) {
   carregarItensTabela();
+function buscarItem() {
+  const termo = document.getElementById('buscaNome').value.toLowerCase();
+  const itens = JSON.parse(localStorage.getItem('cmdb-itens')) || [];
+  const resultado = document.getElementById('resultadoBusca');
+
+  const encontrados = itens.filter(item =>
+    item.nome.toLowerCase().includes(termo)
+  );
+
+  if (encontrados.length === 0) {
+    resultado.innerHTML = `<p>Nenhum item encontrado.</p>`;
+    return;
+  }
+
+  let html = '<table border="1" cellspacing="0" cellpadding="10">';
+  html += `
+    <tr>
+      <th>Nome</th>
+      <th>Data de Compra</th>
+      <th>Modelo</th>
+      <th>Usuário</th>
+    </tr>
+  `;
+
+  encontrados.forEach(item => {
+    html += `
+      <tr>
+        <td>${item.nome}</td>
+        <td>${item.dataCompra}</td>
+        <td>${item.modelo}</td>
+        <td>${item.usuario}</td>
+      </tr>
+    `;
+  });
+
+  html += '</table>';
+  resultado.innerHTML = html;
 }
+
