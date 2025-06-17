@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cadastro de Itens - CMDB</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Cadastro de Novo Item</h1>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="cadastro.html">Cadastrar Item</a> |
+      <a href="lista.html">Listar Itens</a>
+    </nav>
+
+    <form id="formCadastro">
+      <label for="nome">Nome do item:</label><br />
+      <input type="text" id="nome" name="nome" required /><br />
+
+      <label for="dataCompra">Data de compra:</label><br />
+      <input type="date" id="dataCompra" name="dataCompra" required /><br />
+
+      <label for="modelo">Modelo / Versão:</label><br />
+      <input type="text" id="modelo" name="modelo" required /><br />
+
+      <label for="usuario">Usuário proprietário:</label><br />
+      <input type="text" id="usuario" name="usuario" required /><br />
+
+      <button type="submit">Cadastrar</button>
+    </form>
+
+    <p id="msgSucesso" style="color: green; margin-top: 15px;"></p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
