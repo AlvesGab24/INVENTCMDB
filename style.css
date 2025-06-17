@@ -1,0 +1,51 @@
+/* Reset básico e fonte */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #e0f7f9;
+  color: #004d40;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  max-width: 800px;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 77, 64, 0.3);
+}
+
+h1, h2, h3 {
+  margin-bottom: 15px;
+  color: #00796b;
+}
+
+nav a {
+  color: #00796b;
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 15px;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #004d40;
+}
+
+section p, section ul {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+ul {
+  list-style: disc inside;
+}
